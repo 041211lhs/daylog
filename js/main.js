@@ -1,0 +1,1 @@
+console.log("DAYLOG main.js loaded");
