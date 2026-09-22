@@ -2,10 +2,9 @@ let currentWeekDate = new Date();
 
 const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
 
-// 이 날짜가 속한 주의 "일요일"을 구함
 function getWeekStart(date) {
   const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  d.setDate(d.getDate() - d.getDay()); // getDay(): 0=일요일
+  d.setDate(d.getDate() - d.getDay());
   return d;
 }
 
@@ -27,27 +26,36 @@ function renderWeek() {
     day.setDate(start.getDate() + i);
     const dateStr = makeDateString(day.getFullYear(), day.getMonth(), day.getDate());
     const events = getEventsByDate(dateStr);
+    const weekday = day.getDay();
 
     const col = document.createElement("div");
     col.className = "week-day-col";
+    if (weekday === 0) col.classList.add("sun");
+    if (weekday === 6) col.classList.add("sat");
 
-    const isToday =
+    const today_ =
       today.getFullYear() === day.getFullYear() &&
       today.getMonth() === day.getMonth() &&
       today.getDate() === day.getDate();
-    if (isToday) col.classList.add("today");
+    if (today_) col.classList.add("today");
 
-    // 토글 버튼 역할을 하는 헤더 (요일/날짜/일정개수/화살표)
     const header = document.createElement("button");
     header.className = "week-day-header";
     header.innerHTML = `
-      <span class="week-day-name">${WEEKDAY_LABELS[day.getDay()]}</span>
+      <span class="week-day-name">${WEEKDAY_LABELS[weekday]}</span>
       <span class="week-day-num">${day.getDate()}</span>
       <span class="week-day-count">${events.length > 0 ? `일정 ${events.length}개` : "일정 없음"}</span>
       <span class="week-toggle-icon">▼</span>
     `;
 
-    // 펼쳤을 때 보이는 일정 목록
+    const detailBtn = document.createElement("button");
+    detailBtn.className = "week-detail-btn";
+    detailBtn.textContent = "자세히 보기";
+    detailBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      showDayView(dateStr);
+    });
+
     const list = document.createElement("div");
     list.className = "week-day-list hidden";
 
@@ -72,6 +80,7 @@ function renderWeek() {
     });
 
     col.appendChild(header);
+    col.appendChild(detailBtn);
     col.appendChild(list);
     grid.appendChild(col);
   }
@@ -95,7 +104,6 @@ function goToNextWeek() {
   renderWeek();
 }
 
-// 월간 달력에서 특정 날짜를 클릭했을 때, 그 날짜가 속한 주로 이동
 function setWeekTo(dateStr) {
   const [y, m, d] = dateStr.split("-").map(Number);
   currentWeekDate = new Date(y, m - 1, d);

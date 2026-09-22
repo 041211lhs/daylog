@@ -2,7 +2,7 @@ let currentDate = new Date();
 
 function renderCalendar() {
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth(); // 0(1월) ~ 11(12월)
+  const month = currentDate.getMonth();
 
   document.getElementById("current-month-label").textContent = `${year}년 ${month + 1}월`;
 
@@ -11,10 +11,9 @@ function renderCalendar() {
 
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
-  const startWeekday = firstDayOfMonth.getDay(); // 0=일요일 시작
+  const startWeekday = firstDayOfMonth.getDay();
   const totalDays = lastDayOfMonth.getDate();
 
-  // 이번 달 1일 이전의 빈 칸 채우기
   for (let i = 0; i < startWeekday; i++) {
     const emptyCell = document.createElement("div");
     emptyCell.className = "day-cell empty";
@@ -25,6 +24,7 @@ function renderCalendar() {
 
   for (let day = 1; day <= totalDays; day++) {
     const dateStr = makeDateString(year, month, day);
+    const weekday = new Date(year, month, day).getDay(); // 0=일, 6=토
 
     const cell = document.createElement("div");
     cell.className = "day-cell";
@@ -37,17 +37,20 @@ function renderCalendar() {
 
     const number = document.createElement("span");
     number.className = "day-number";
+    if (weekday === 0) number.classList.add("sun");
+    if (weekday === 6) number.classList.add("sat");
     number.textContent = day;
     cell.appendChild(number);
 
-    // 이 날짜의 일정을 최대 2개까지 표시하고, 나머지는 "+N개"로 표시
     const events = getEventsByDate(dateStr);
     events.slice(0, 2).forEach((ev) => {
       const chip = document.createElement("div");
       chip.className = "event-chip";
+      if (weekday === 0) chip.classList.add("sun");
+      if (weekday === 6) chip.classList.add("sat");
       chip.textContent = ev.time ? `${ev.time} ${ev.title}` : ev.title;
       chip.addEventListener("click", (event) => {
-        event.stopPropagation(); // 칸 전체의 클릭 이벤트가 같이 실행되지 않게 막음
+        event.stopPropagation();
         openEventModal(dateStr, ev);
       });
       cell.appendChild(chip);
@@ -60,7 +63,6 @@ function renderCalendar() {
       cell.appendChild(more);
     }
 
-    // 임시 동작: 칸을 클릭하면 그 날짜로 일정 추가 (5단계에서 주간 화면 이동으로 바뀝니다)
     cell.addEventListener("click", () => showWeekView(dateStr));
 
     grid.appendChild(cell);

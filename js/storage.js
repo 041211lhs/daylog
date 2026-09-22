@@ -1,6 +1,8 @@
 const STORAGE_KEY = "daylog_events";
+const DAY_DATA_KEY = "daylog_day_data";
 
-// localStorage는 문자열만 저장할 수 있어서, 저장할 때 JSON.stringify, 꺼낼 때 JSON.parse를 씁니다.
+// ---------- 일정(events) ----------
+
 function loadEvents() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) return [];
@@ -15,7 +17,6 @@ function saveEvents(events) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
 }
 
-// 특정 날짜("2026-09-21")의 일정만 시간순으로 가져오기
 function getEventsByDate(dateStr) {
   return loadEvents()
     .filter((ev) => ev.date === dateStr)
@@ -44,9 +45,44 @@ function deleteEvent(id) {
   saveEvents(events);
 }
 
-// 연/월/일 숫자를 "2026-09-05" 형태 문자열로 바꾸기 (month는 0부터 시작하므로 +1)
 function makeDateString(year, month, day) {
   const mm = String(month + 1).padStart(2, "0");
   const dd = String(day).padStart(2, "0");
   return `${year}-${mm}-${dd}`;
+}
+
+// ---------- 날짜별 기분 + 기록(day data) ----------
+// 구조: { "2026-09-21": { mood: "😊", journal: "오늘은..." }, ... }
+
+function loadDayData() {
+  const saved = localStorage.getItem(DAY_DATA_KEY);
+  if (!saved) return {};
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveDayData(allData) {
+  localStorage.setItem(DAY_DATA_KEY, JSON.stringify(allData));
+}
+
+function getDayData(dateStr) {
+  const all = loadDayData();
+  return all[dateStr] || { mood: null, journal: "" };
+}
+
+function saveMood(dateStr, mood) {
+  const all = loadDayData();
+  if (!all[dateStr]) all[dateStr] = { mood: null, journal: "" };
+  all[dateStr].mood = mood;
+  saveDayData(all);
+}
+
+function saveJournal(dateStr, journal) {
+  const all = loadDayData();
+  if (!all[dateStr]) all[dateStr] = { mood: null, journal: "" };
+  all[dateStr].journal = journal;
+  saveDayData(all);
 }

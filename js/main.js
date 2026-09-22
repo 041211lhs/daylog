@@ -3,19 +3,29 @@ console.log("DAYLOG main.js loaded");
 function showMonthView() {
   document.getElementById("calendar-view").classList.remove("hidden");
   document.getElementById("week-view").classList.add("hidden");
+  document.getElementById("day-view").classList.add("hidden");
   renderCalendar();
 }
 
 function showWeekView(dateStr) {
   document.getElementById("calendar-view").classList.add("hidden");
   document.getElementById("week-view").classList.remove("hidden");
+  document.getElementById("day-view").classList.add("hidden");
   setWeekTo(dateStr);
 }
 
-// 현재 보이는 화면이 어디든, 그 화면만 다시 그림
+function showDayView(dateStr) {
+  document.getElementById("calendar-view").classList.add("hidden");
+  document.getElementById("week-view").classList.add("hidden");
+  document.getElementById("day-view").classList.remove("hidden");
+  currentDayStr = dateStr;
+  renderDay();
+}
+
 function refreshViews() {
-  const weekVisible = !document.getElementById("week-view").classList.contains("hidden");
-  if (weekVisible) {
+  if (!document.getElementById("day-view").classList.contains("hidden")) {
+    renderDayEvents();
+  } else if (!document.getElementById("week-view").classList.contains("hidden")) {
     renderWeek();
   } else {
     renderCalendar();
@@ -34,6 +44,12 @@ document.getElementById("add-event-btn").addEventListener("click", () => {
 document.getElementById("back-to-month-btn").addEventListener("click", showMonthView);
 document.getElementById("prev-week-btn").addEventListener("click", goToPrevWeek);
 document.getElementById("next-week-btn").addEventListener("click", goToNextWeek);
+
+document.getElementById("back-to-week-btn").addEventListener("click", () => showWeekView(currentDayStr));
+document.getElementById("day-add-event-btn").addEventListener("click", () => openEventModal(currentDayStr, null));
+
+document.getElementById("save-journal-btn").addEventListener("click", handleSaveJournal);
+document.getElementById("reflect-btn").addEventListener("click", handleReflect);
 
 setupModal();
 showMonthView();

@@ -15,24 +15,11 @@ body {
   border-bottom: 1px solid #e5e7eb;
 }
 
-#calendar-view {
-  max-width: 900px;
-  margin: 24px auto;
-  padding: 0 16px;
+.hidden {
+  display: none !important;
 }
 
-.calendar-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.calendar-header h2 {
-  flex: 1;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+/* ---------- 공통 버튼 ---------- */
 
 .nav-btn, .today-btn {
   border: 1px solid #d1d5db;
@@ -45,6 +32,65 @@ body {
 
 .nav-btn:hover, .today-btn:hover {
   background: #f3f4f6;
+}
+
+.primary-btn {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+
+.primary-btn:disabled {
+  background: #93c5fd;
+  border-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.danger-btn {
+  margin-right: auto;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #dc2626;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.small-btn {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin-bottom: 12px;
+}
+
+/* ---------- 월간 달력 ---------- */
+
+#calendar-view {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.calendar-header h2 {
+  flex: 1;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .weekday-row {
@@ -99,35 +145,6 @@ body {
   color: #fff;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.primary-btn {
-  border: 1px solid #2563eb;
-  background: #2563eb;
-  color: #fff;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.primary-btn:hover {
-  background: #1d4ed8;
-}
-
-.danger-btn {
-  margin-right: auto;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #dc2626;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
 .event-chip {
   margin-top: 4px;
   padding: 2px 6px;
@@ -149,6 +166,8 @@ body {
   font-size: 0.7rem;
   color: #6b7280;
 }
+
+/* ---------- 일정 추가/수정 모달 ---------- */
 
 .modal {
   position: fixed;
@@ -204,6 +223,8 @@ body {
   gap: 8px;
   justify-content: flex-end;
 }
+
+/* ---------- 주간 화면 ---------- */
 
 .week-header {
   display: flex;
@@ -289,6 +310,21 @@ body {
   transform: rotate(180deg);
 }
 
+.week-detail-btn {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+  color: #2563eb;
+  font-size: 0.78rem;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.week-detail-btn:hover {
+  background: #f3f4f6;
+}
+
 .week-day-list {
   border-top: 1px solid #e5e7eb;
   padding: 8px;
@@ -309,4 +345,183 @@ body {
 
 .week-event-item:hover {
   background: #eff6ff;
+}
+
+/* ---------- 하루 상세 화면 ---------- */
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1100px;
+  margin: 24px auto 16px;
+  padding: 0 16px;
+}
+
+.day-header h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.day-panels {
+  display: flex;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px 24px;
+}
+
+.day-panel {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}
+
+.day-panel h3 {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.day-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.day-event-item {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.day-event-item:hover {
+  background: #f3f4f6;
+}
+
+.day-event-time {
+  color: #6b7280;
+  min-width: 42px;
+}
+
+.day-event-empty {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* 오늘의 기분 */
+
+.mood-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  font-size: 1.4rem;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mood-btn:hover {
+  background: #f3f4f6;
+}
+
+.mood-btn.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+/* 오늘의 기록 + AI 회고 */
+
+.journal-input {
+  width: 100%;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #1f2933;
+}
+
+.journal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.journal-saved-msg {
+  font-size: 0.8rem;
+  color: #2563eb;
+}
+
+.reflect-box {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.reflect-result {
+  margin-top: 8px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.reflect-summary {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.reflect-keywords {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.keyword-chip {
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  background: #eff6ff;
+  color: #1e40af;
+  border-radius: 999px;
+}
+
+/* ---------- 반응형 (모바일) ---------- */
+
+@media (max-width: 640px) {
+  .day-panels {
+    flex-direction: column;
+  }
+
+  .calendar-header {
+    gap: 8px;
+  }
+
+  .calendar-header h2 {
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .day-cell {
+    min-height: 56px;
+    padding: 4px;
+  }
+
+  .event-chip {
+    font-size: 0.68rem;
+  }
 }

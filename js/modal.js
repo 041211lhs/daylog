@@ -1,4 +1,3 @@
-// null이면 "새 일정 추가", id 값이 있으면 "기존 일정 수정"
 let editingEventId = null;
 
 function openEventModal(defaultDate, eventToEdit) {
@@ -50,7 +49,7 @@ function handleSaveEvent() {
   }
 
   closeEventModal();
-  refreshViews(); // main.js에 있는 함수: 화면을 다시 그림
+  refreshViews();
 }
 
 function handleDeleteEvent() {
@@ -60,7 +59,6 @@ function handleDeleteEvent() {
   refreshViews();
 }
 
-// 입력창의 버튼들을 함수에 연결 (페이지가 열릴 때 main.js가 한 번 호출)
 function setupModal() {
   const modal = document.getElementById("event-modal");
 
@@ -68,7 +66,6 @@ function setupModal() {
   document.getElementById("cancel-event-btn").addEventListener("click", closeEventModal);
   document.getElementById("delete-event-btn").addEventListener("click", handleDeleteEvent);
 
-  // 어두운 배경 부분을 클릭하면 닫기
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeEventModal();
   });
