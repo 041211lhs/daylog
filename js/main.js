@@ -1,8 +1,25 @@
 console.log("DAYLOG main.js loaded");
 
-// 일정이 바뀔 때마다 화면을 다시 그리는 함수. 나중에 주간/하루 화면도 여기에 추가합니다.
-function refreshViews() {
+function showMonthView() {
+  document.getElementById("calendar-view").classList.remove("hidden");
+  document.getElementById("week-view").classList.add("hidden");
   renderCalendar();
+}
+
+function showWeekView(dateStr) {
+  document.getElementById("calendar-view").classList.add("hidden");
+  document.getElementById("week-view").classList.remove("hidden");
+  setWeekTo(dateStr);
+}
+
+// 현재 보이는 화면이 어디든, 그 화면만 다시 그림
+function refreshViews() {
+  const weekVisible = !document.getElementById("week-view").classList.contains("hidden");
+  if (weekVisible) {
+    renderWeek();
+  } else {
+    renderCalendar();
+  }
 }
 
 document.getElementById("prev-month-btn").addEventListener("click", goToPrevMonth);
@@ -14,5 +31,9 @@ document.getElementById("add-event-btn").addEventListener("click", () => {
   openEventModal(makeDateString(t.getFullYear(), t.getMonth(), t.getDate()), null);
 });
 
+document.getElementById("back-to-month-btn").addEventListener("click", showMonthView);
+document.getElementById("prev-week-btn").addEventListener("click", goToPrevWeek);
+document.getElementById("next-week-btn").addEventListener("click", goToNextWeek);
+
 setupModal();
-renderCalendar();
+showMonthView();

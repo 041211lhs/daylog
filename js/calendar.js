@@ -61,7 +61,7 @@ function renderCalendar() {
     }
 
     // 임시 동작: 칸을 클릭하면 그 날짜로 일정 추가 (5단계에서 주간 화면 이동으로 바뀝니다)
-    cell.addEventListener("click", () => openEventModal(dateStr, null));
+    cell.addEventListener("click", () => showWeekView(dateStr));
 
     grid.appendChild(cell);
   }
