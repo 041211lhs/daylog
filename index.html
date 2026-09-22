@@ -1,728 +1,107 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
-
-:root {
-  --color-bg: #f5f6fa;
-  --color-surface: #ffffff;
-  --color-border: #e6e8ef;
-  --color-text: #1a1d29;
-  --color-text-muted: #767b8a;
-  --color-text-faint: #a2a6b3;
-
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-primary-soft: #eef0ff;
-  --color-primary-soft-hover: #e0e3fe;
-
-  --color-sun: #e0403f;
-  --color-sun-soft: #fdecec;
-  --color-sat: #2563eb;
-  --color-sat-soft: #e8f0fe;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-
-  --shadow-card: 0 1px 2px rgba(20, 21, 41, 0.04), 0 8px 24px rgba(20, 21, 41, 0.05);
-  --shadow-pop: 0 2px 6px rgba(20, 21, 41, 0.08), 0 12px 28px rgba(20, 21, 41, 0.08);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
-  color: var(--color-text);
-  background: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* ---------- 헤더 ---------- */
-
-.app-header {
-  padding: 22px 24px 18px;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brand-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), #8b7bff);
-}
-
-.brand h1 {
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.brand-tagline {
-  margin-top: 2px;
-  margin-left: 18px;
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
-}
-
-/* ---------- 공용 카드 ---------- */
-
-.panel-card {
-  max-width: 1000px;
-  margin: 28px auto;
-  padding: 24px;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-
-#calendar-view, #week-view, #day-view {
-  padding: 0 16px;
-}
-
-/* ---------- 버튼 공통 ---------- */
-
-.icon-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: 999px;
-  width: 34px;
-  height: 34px;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.icon-btn--wide {
-  width: auto;
-  padding: 0 14px;
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-
-.icon-btn:hover {
-  background: #f2f3f8;
-  border-color: #d8dbe6;
-}
-
-.today-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
-  padding: 7px 14px;
-  font-size: 0.86rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.today-btn:hover {
-  background: #f2f3f8;
-}
-
-.primary-btn {
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-}
-
-.primary-btn:hover {
-  background: var(--color-primary-hover);
-}
-
-.primary-btn:active {
-  transform: translateY(1px);
-}
-
-.primary-btn:disabled {
-  background: #b8b4f3;
-  cursor: not-allowed;
-}
-
-.ghost-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
-  padding: 7px 14px;
-  font-size: 0.86rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.ghost-btn:hover {
-  background: #f2f3f8;
-}
-
-.danger-btn {
-  margin-right: auto;
-  border: 1px solid #f3d3d3;
-  background: #fff;
-  color: var(--color-sun);
-  border-radius: var(--radius-sm);
-  padding: 7px 14px;
-  font-size: 0.86rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.danger-btn:hover {
-  background: var(--color-sun-soft);
-}
-
-.small-btn {
-  font-size: 0.8rem;
-  padding: 5px 12px;
-}
-
-/* ---------- 월간 달력 ---------- */
-
-.calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.calendar-nav-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.calendar-nav-group h2 {
-  min-width: 108px;
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.calendar-action-group {
-  display: flex;
-  gap: 8px;
-}
-
-.weekday-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.weekday-row .sun { color: var(--color-sun); }
-.weekday-row .sat { color: var(--color-sat); }
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin-top: 6px;
-}
-
-.day-cell {
-  min-height: 84px;
-  border-radius: var(--radius-sm);
-  padding: 8px 6px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.day-cell:hover {
-  background: #f5f6fb;
-}
-
-.day-cell.empty {
-  cursor: default;
-}
-
-.day-cell.empty:hover {
-  background: transparent;
-}
-
-.day-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 50%;
-}
-
-.day-number.sun { color: var(--color-sun); }
-.day-number.sat { color: var(--color-sat); }
-
-.day-cell.today .day-number {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-.event-chip {
-  margin-top: 5px;
-  padding: 3px 6px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  border-radius: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.event-chip:hover {
-  background: var(--color-primary-soft-hover);
-}
-
-.event-chip.sun {
-  background: var(--color-sun-soft);
-  color: var(--color-sun);
-}
-
-.event-chip.sat {
-  background: var(--color-sat-soft);
-  color: var(--color-sat);
-}
-
-.event-more {
-  margin-top: 3px;
-  font-size: 0.68rem;
-  color: var(--color-text-faint);
-  padding-left: 2px;
-}
-
-/* ---------- 일정 추가/수정 모달 ---------- */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(17, 18, 34, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 10;
-}
-
-.modal-box {
-  width: 100%;
-  max-width: 400px;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  box-shadow: var(--shadow-pop);
-}
-
-.modal-box h3 {
-  margin-bottom: 18px;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.modal-box label {
-  display: block;
-  margin-bottom: 14px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.modal-box input {
-  display: block;
-  width: 100%;
-  margin-top: 5px;
-  padding: 9px 11px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: 0.92rem;
-  font-family: inherit;
-  color: var(--color-text);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.modal-box input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-soft);
-}
-
-.modal-error {
-  min-height: 1.2em;
-  margin-bottom: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-sun);
-}
-
-.modal-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-/* ---------- 주간 화면 ---------- */
-
-.week-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.week-grid {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.week-day-col {
-  flex: 1 0 134px;
-  min-width: 134px;
-  border: 1px solid var(--color-border);
-  border-top: 3px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  overflow: hidden;
-  transition: border-color 0.15s;
-}
-
-.week-day-col.today {
-  border-top-color: var(--color-primary);
-}
-
-.week-day-col.sun {
-  border-top-color: var(--color-sun);
-}
-
-.week-day-col.sat {
-  border-top-color: var(--color-sat);
-}
-
-.week-day-header {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border: none;
-  background: var(--color-surface);
-  padding: 12px 12px 9px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.week-day-header:hover {
-  background: #f9f9fc;
-}
-
-.week-day-name {
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.week-day-col.sun .week-day-name { color: var(--color-sun); }
-.week-day-col.sat .week-day-name { color: var(--color-sat); }
-
-.week-day-num {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.week-day-col.today .week-day-num {
-  color: var(--color-primary);
-}
-
-.week-day-count {
-  font-size: 0.74rem;
-  color: var(--color-text-muted);
-}
-
-.week-toggle-icon {
-  align-self: flex-end;
-  font-size: 0.68rem;
-  color: var(--color-text-faint);
-  transition: transform 0.15s;
-}
-
-.week-day-header.open .week-toggle-icon {
-  transform: rotate(180deg);
-}
-
-.week-detail-btn {
-  width: 100%;
-  border: none;
-  border-top: 1px solid var(--color-border);
-  background: #fafafe;
-  color: var(--color-primary);
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 7px;
-  cursor: pointer;
-}
-
-.week-detail-btn:hover {
-  background: var(--color-primary-soft);
-}
-
-.week-day-list {
-  border-top: 1px solid var(--color-border);
-  padding: 8px;
-}
-
-.week-day-empty {
-  font-size: 0.78rem;
-  color: var(--color-text-faint);
-  padding: 4px;
-}
-
-.week-event-item {
-  font-size: 0.83rem;
-  padding: 6px 5px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.week-event-item:hover {
-  background: var(--color-primary-soft);
-}
-
-/* ---------- 하루 상세 화면 ---------- */
-
-.day-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-.day-header h2 {
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.day-panels {
-  display: flex;
-  gap: 16px;
-}
-
-.day-panel {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--color-border);
-  border-top: 3px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 18px;
-  background: var(--color-surface);
-}
-
-.day-panel--schedule { border-top-color: var(--color-primary); }
-.day-panel--mood { border-top-color: #f59e0b; }
-.day-panel--journal { border-top-color: #0d9488; }
-
-.day-panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.day-panel h3 {
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.day-event-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.day-event-item {
-  display: flex;
-  gap: 8px;
-  padding: 9px 8px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.88rem;
-  transition: background 0.15s;
-}
-
-.day-event-item:hover {
-  background: #f5f6fb;
-}
-
-.day-event-time {
-  color: var(--color-text-muted);
-  min-width: 42px;
-  font-variant-numeric: tabular-nums;
-}
-
-.day-event-empty {
-  color: var(--color-text-faint);
-  font-size: 0.85rem;
-}
-
-/* 오늘의 기분 */
-
-.mood-options {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.mood-btn {
-  font-size: 1.5rem;
-  line-height: 1;
-  border: 1px solid var(--color-border);
-  background: #fff;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
-}
-
-.mood-btn:hover {
-  background: #f9f9fc;
-  transform: translateY(-1px);
-}
-
-.mood-btn.selected {
-  border-color: #f59e0b;
-  background: #fffaf0;
-  box-shadow: 0 0 0 3px #fef3c7;
-}
-
-/* 오늘의 기록 + AI 회고 */
-
-.journal-input {
-  width: 100%;
-  resize: vertical;
-  padding: 11px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 0.9rem;
-  color: var(--color-text);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.journal-input:focus {
-  outline: none;
-  border-color: #0d9488;
-  box-shadow: 0 0 0 3px #ccfbf1;
-}
-
-.journal-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 9px;
-}
-
-.journal-saved-msg {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #0d9488;
-}
-
-.reflect-box {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--color-border);
-}
-
-.reflect-result {
-  margin-top: 10px;
-  padding: 14px;
-  background: var(--color-primary-soft);
-  border-radius: var(--radius-sm);
-  border-left: 3px solid var(--color-primary);
-}
-
-.reflect-summary {
-  font-size: 0.9rem;
-  line-height: 1.55;
-  margin-bottom: 10px;
-}
-
-.reflect-keywords {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.keyword-chip {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 3px 10px;
-  background: #fff;
-  color: var(--color-primary);
-  border-radius: 999px;
-}
-
-/* ---------- 반응형 (모바일) ---------- */
-
-@media (max-width: 640px) {
-  .panel-card {
-    margin: 16px auto;
-    padding: 16px;
-    border-radius: var(--radius-md);
-  }
-
-  .app-header {
-    padding: 16px;
-  }
-
-  .day-panels {
-    flex-direction: column;
-  }
-
-  .calendar-header {
-    justify-content: center;
-  }
-
-  .calendar-action-group {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .day-cell {
-    min-height: 60px;
-    padding: 5px 4px;
-  }
-
-  .event-chip {
-    font-size: 0.66rem;
-  }
-}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAYLOG</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>DAYLOG</h1>
+  </header>
+
+  <main id="app">
+    <section id="calendar-view">
+      <div class="calendar-header">
+        <button id="prev-month-btn" class="nav-btn">‹</button>
+        <h2 id="current-month-label"></h2>
+        <button id="next-month-btn" class="nav-btn">›</button>
+        <button id="today-btn" class="today-btn">오늘</button>
+        <button id="add-event-btn" class="primary-btn">+ 일정 추가</button>
+      </div>
+
+      <div class="weekday-row">
+        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+      </div>
+
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
+
+    <section id="week-view" class="hidden">
+      <div class="week-header">
+        <button id="back-to-month-btn" class="nav-btn">← 월간</button>
+        <button id="prev-week-btn" class="nav-btn">‹</button>
+        <h2 id="current-week-label"></h2>
+        <button id="next-week-btn" class="nav-btn">›</button>
+      </div>
+
+      <div id="week-grid" class="week-grid"></div>
+    </section>
+
+    <section id="day-view" class="hidden">
+      <div class="day-header">
+        <button id="back-to-week-btn" class="nav-btn">← 주간</button>
+        <h2 id="current-day-label"></h2>
+      </div>
+
+      <div class="day-panels">
+        <div class="day-panel">
+          <h3>오늘의 일정</h3>
+          <button id="day-add-event-btn" class="primary-btn small-btn">+ 추가</button>
+          <div id="day-event-list" class="day-event-list"></div>
+        </div>
+
+        <div class="day-panel">
+          <h3>오늘의 기분</h3>
+          <div id="mood-options" class="mood-options"></div>
+        </div>
+
+        <div class="day-panel">
+          <h3>오늘의 기록</h3>
+          <textarea id="journal-input" class="journal-input" rows="6" placeholder="오늘 하루는 어땠나요?"></textarea>
+          <div class="journal-actions">
+            <button id="save-journal-btn" class="nav-btn small-btn">기록 저장</button>
+            <span id="journal-saved-msg" class="journal-saved-msg"></span>
+          </div>
+
+          <div class="reflect-box">
+            <button id="reflect-btn" class="primary-btn small-btn">AI 하루 회고 요청</button>
+            <p id="reflect-error" class="modal-error"></p>
+            <div id="reflect-result" class="reflect-result hidden"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 일정 추가/수정 입력창 (평소에는 hidden 상태) -->
+  <div id="event-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3 id="modal-title">일정 추가</h3>
+      <label>날짜
+        <input type="date" id="event-date" />
+      </label>
+      <label>시간 (선택)
+        <input type="time" id="event-time" />
+      </label>
+      <label>제목
+        <input type="text" id="event-title" maxlength="50" placeholder="예: 경제학 수업" />
+      </label>
+      <p id="modal-error" class="modal-error"></p>
+      <div class="modal-actions">
+        <button id="delete-event-btn" class="danger-btn hidden">삭제</button>
+        <button id="cancel-event-btn" class="nav-btn">취소</button>
+        <button id="save-event-btn" class="primary-btn">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/week.js"></script>
+  <script src="js/day.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
