@@ -24,6 +24,9 @@ class handler(BaseHTTPRequestHandler):
             return
 
         api_key = os.environ.get('OPENAI_API_KEY')
+        base_url = os.environ.get('OPENAI_BASE_URL', 'https://api.openai.com/v1')
+        model = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
+
         if not api_key:
             self._send_json(500, {'error': 'AI 응답을 가져오지 못했습니다. 잠시 후 다시 시도해주세요.'})
             return
@@ -43,13 +46,13 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             request_body = json.dumps({
-                "model": "gpt-4o-mini",
+                "model": model,
                 "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.7,
             }).encode('utf-8')
 
             req = urllib.request.Request(
-                "https://api.openai.com/v1/chat/completions",
+                f"{base_url.rstrip('/')}/chat/completions",
                 data=request_body,
                 headers={
                     "Content-Type": "application/json",

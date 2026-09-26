@@ -2,6 +2,7 @@ let editingEventId = null;
 
 function openEventModal(defaultDate, eventToEdit) {
   const dateInput = document.getElementById("event-date");
+  const endDateInput = document.getElementById("event-end-date");
   const timeInput = document.getElementById("event-time");
   const titleInput = document.getElementById("event-title");
   const deleteBtn = document.getElementById("delete-event-btn");
@@ -12,6 +13,7 @@ function openEventModal(defaultDate, eventToEdit) {
     editingEventId = eventToEdit.id;
     document.getElementById("modal-title").textContent = "일정 수정";
     dateInput.value = eventToEdit.date;
+    endDateInput.value = isMultiDay(eventToEdit) ? eventToEdit.endDate : "";
     timeInput.value = eventToEdit.time;
     titleInput.value = eventToEdit.title;
     deleteBtn.classList.remove("hidden");
@@ -19,6 +21,7 @@ function openEventModal(defaultDate, eventToEdit) {
     editingEventId = null;
     document.getElementById("modal-title").textContent = "일정 추가";
     dateInput.value = defaultDate;
+    endDateInput.value = "";
     timeInput.value = "";
     titleInput.value = "";
     deleteBtn.classList.add("hidden");
@@ -34,18 +37,27 @@ function closeEventModal() {
 
 function handleSaveEvent() {
   const date = document.getElementById("event-date").value;
+  const endDateRaw = document.getElementById("event-end-date").value;
   const time = document.getElementById("event-time").value;
   const title = document.getElementById("event-title").value.trim();
+  const errorEl = document.getElementById("modal-error");
 
   if (!date || !title) {
-    document.getElementById("modal-error").textContent = "날짜와 제목을 입력해주세요.";
+    errorEl.textContent = "날짜와 제목을 입력해주세요.";
+    return;
+  }
+
+  const endDate = endDateRaw || date;
+
+  if (endDate < date) {
+    errorEl.textContent = "종료일은 시작일보다 빠를 수 없습니다.";
     return;
   }
 
   if (editingEventId) {
-    updateEvent(editingEventId, date, time, title);
+    updateEvent(editingEventId, date, endDate, time, title);
   } else {
-    addEvent(date, time, title);
+    addEvent(date, endDate, time, title);
   }
 
   closeEventModal();
