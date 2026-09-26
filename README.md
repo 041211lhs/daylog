@@ -102,3 +102,42 @@ Vercel 프로젝트 → **Settings → Environment Variables**에 아래 3개를
 - **환경 변수로 키 관리**: API 키를 프론트 코드에 두면 브라우저 개발자도구로 노출되기 때문에, 서버(Python 함수) 쪽에서만 `os.environ.get()`으로 읽도록 구성했습니다.
 - **로컬 vs 배포 환경 차이**: 로컬에서 `index.html`만 열면 정적 화면은 보이지만 `/api/reflect`는 동작하지 않습니다. Vercel의 Framework Preset 설정이 배포 결과를 크게 바꾼다는 것도 직접 겪으며 확인했습니다.
 - **디버깅 경험**: `pyproject.toml` entrypoint 형식 오류, `vercel.json`의 오래된 `runtime` 문법 오류, `uv lock`을 위한 `[project]` 테이블 누락, Framework Preset 불일치로 정적 파일이 안 뜨는 문제 등을 순서대로 겪었고, 각 에러 메시지를 기준으로 원인을 좁혀가며 해결했습니다.
+
+## API 응답 형식
+
+`POST /api/reflect` 요청에 대한 응답 형식입니다.
+
+**요청 본문**
+```json
+{
+  "journal": "오늘은 경제학 수업을 듣고 아르바이트를 했다",
+  "events": [
+    { "time": "09:00", "title": "경제학 수업" },
+    { "time": "18:00", "title": "아르바이트" }
+  ]
+}
+```
+
+**200 성공 응답**
+```json
+{
+  "summary": "오전에는 수업을, 저녁에는 아르바이트를 하며 바쁘게 보낸 하루였다.",
+  "keywords": ["경제학", "아르바이트", "일정"]
+}
+```
+
+**400 실패 응답 (빈 입력)**
+```json
+{ "error": "오늘의 기록을 먼저 작성해주세요." }
+```
+
+**502 실패 응답 (AI API 오류/타임아웃)**
+```json
+{ "error": "AI 응답을 가져오지 못했습니다. 잠시 후 다시 시도해주세요." }
+```
+
+| 필드 | 타입 | 설명 |
+|---|---|---|
+| `summary` | string | 2-4문장의 하루 정리 |
+| `keywords` | string[] | 키워드 2-4개 |
+| `error` | string | 실패 시에만 포함되는 안내 메시지 |
