@@ -1,15 +1,12 @@
-let currentDayStr = null; // "2026-09-21"
-let isReflecting = false; // AI 요청 중 중복 클릭 방지용
+let isReflecting = false;
 
 const MOOD_OPTIONS = ["😄", "😊", "😐", "😞", "😫"];
 
 function renderDay() {
-  const [y, m, d] = currentDayStr.split("-").map(Number);
-  const dateObj = new Date(y, m - 1, d);
   const weekdayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
   document.getElementById("current-day-label").textContent =
-    `${y}년 ${m}월 ${d}일 (${weekdayNames[dateObj.getDay()]})`;
+    `${focusDate.getFullYear()}년 ${focusDate.getMonth() + 1}월 ${focusDate.getDate()}일 (${weekdayNames[focusDate.getDay()]})`;
 
   renderDayEvents();
   renderMood();
@@ -18,9 +15,11 @@ function renderDay() {
 }
 
 function renderDayEvents() {
+  const dateStr = getFocusDateStr();
   const list = document.getElementById("day-event-list");
   list.innerHTML = "";
-  const events = getEventsByDate(currentDayStr);
+
+  const events = getEventsByDate(dateStr);
 
   if (events.length === 0) {
     const empty = document.createElement("p");
@@ -33,19 +32,24 @@ function renderDayEvents() {
   events.forEach((ev) => {
     const item = document.createElement("div");
     item.className = "day-event-item";
+    if (isMultiDay(ev)) item.classList.add("multi-day");
+
+    const label = isMultiDay(ev) ? `${ev.date} ~ ${ev.endDate}` : ev.time || "";
+
     item.innerHTML = `
-      <span class="day-event-time">${ev.time || ""}</span>
+      <span class="day-event-time">${label}</span>
       <span class="day-event-title">${ev.title}</span>
     `;
-    item.addEventListener("click", () => openEventModal(currentDayStr, ev));
+    item.addEventListener("click", () => openEventModal(dateStr, ev));
     list.appendChild(item);
   });
 }
 
 function renderMood() {
+  const dateStr = getFocusDateStr();
   const container = document.getElementById("mood-options");
   container.innerHTML = "";
-  const data = getDayData(currentDayStr);
+  const data = getDayData(dateStr);
 
   MOOD_OPTIONS.forEach((mood) => {
     const btn = document.createElement("button");
@@ -53,7 +57,7 @@ function renderMood() {
     btn.textContent = mood;
     if (data.mood === mood) btn.classList.add("selected");
     btn.addEventListener("click", () => {
-      saveMood(currentDayStr, mood);
+      saveMood(dateStr, mood);
       renderMood();
     });
     container.appendChild(btn);
@@ -61,14 +65,16 @@ function renderMood() {
 }
 
 function renderJournal() {
-  const data = getDayData(currentDayStr);
+  const dateStr = getFocusDateStr();
+  const data = getDayData(dateStr);
   document.getElementById("journal-input").value = data.journal || "";
   document.getElementById("journal-saved-msg").textContent = "";
 }
 
 function handleSaveJournal() {
+  const dateStr = getFocusDateStr();
   const text = document.getElementById("journal-input").value;
-  saveJournal(currentDayStr, text);
+  saveJournal(dateStr, text);
   const msg = document.getElementById("journal-saved-msg");
   msg.textContent = "저장되었습니다.";
   setTimeout(() => {
@@ -84,8 +90,9 @@ function clearReflectResult() {
 }
 
 async function handleReflect() {
-  if (isReflecting) return; // 이미 요청 중이면 또 누르지 못하게 막음
+  if (isReflecting) return;
 
+  const dateStr = getFocusDateStr();
   const journal = document.getElementById("journal-input").value.trim();
   const errorEl = document.getElementById("reflect-error");
   const resultEl = document.getElementById("reflect-result");
@@ -100,14 +107,13 @@ async function handleReflect() {
     return;
   }
 
-  // AI에게 보내기 전에 현재 입력 내용을 저장해둠
-  saveJournal(currentDayStr, journal);
+  saveJournal(dateStr, journal);
 
   isReflecting = true;
   btn.disabled = true;
   btn.textContent = "AI가 정리하는 중...";
 
-  const events = getEventsByDate(currentDayStr);
+  const events = getEventsByDate(dateStr);
 
   try {
     const response = await fetch("/api/reflect", {

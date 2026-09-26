@@ -7,15 +7,31 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <span class="brand-dot"></span>
-      <h1>DAYLOG</h1>
+  <!-- 접속 시 잠깐 보였다 사라지는 스플래시 화면 -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <span class="splash-dot"></span>
+      <span class="splash-text">DAYLOG</span>
     </div>
-    <p class="brand-tagline">일정을 관리하고, 하루를 기록하는 캘린더</p>
+  </div>
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <h1>DAYLOG</h1>
+      </div>
+      <p class="brand-tagline">일정을 관리하고, 하루를 기록하는 캘린더</p>
+    </div>
+
+    <div class="view-tabs">
+      <button class="view-tab-btn active" data-view="month" id="tab-month-btn">Month</button>
+      <button class="view-tab-btn" data-view="week" id="tab-week-btn">Week</button>
+      <button class="view-tab-btn" data-view="day" id="tab-day-btn">Day</button>
+    </div>
   </header>
 
   <main id="app">
@@ -104,8 +120,11 @@
   <div id="event-modal" class="modal hidden">
     <div class="modal-box">
       <h3 id="modal-title">일정 추가</h3>
-      <label>날짜
+      <label>시작일
         <input type="date" id="event-date" />
+      </label>
+      <label>종료일 (선택 — 여러 날에 걸친 일정이면 입력)
+        <input type="date" id="event-end-date" />
       </label>
       <label>시간 (선택)
         <input type="time" id="event-time" />

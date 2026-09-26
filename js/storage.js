@@ -2,6 +2,8 @@ const STORAGE_KEY = "daylog_events";
 const DAY_DATA_KEY = "daylog_day_data";
 
 // ---------- 일정(events) ----------
+// event: { id, date, endDate, time, title }
+// endDate가 date와 같으면 "하루짜리" 일정, 다르면 "기간" 일정입니다.
 
 function loadEvents() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -17,23 +19,36 @@ function saveEvents(events) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
 }
 
-function getEventsByDate(dateStr) {
-  return loadEvents()
-    .filter((ev) => ev.date === dateStr)
-    .sort((a, b) => a.time.localeCompare(b.time));
+function isMultiDay(ev) {
+  return !!ev.endDate && ev.endDate !== ev.date;
 }
 
-function addEvent(date, time, title) {
+// 특정 날짜가 포함된 모든 일정 (하루짜리 + 기간 일정 둘 다 포함)
+function getEventsByDate(dateStr) {
+  return loadEvents()
+    .filter((ev) => ev.date <= dateStr && (ev.endDate || ev.date) >= dateStr)
+    .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+}
+
+// startStr ~ endStr 범위와 겹치는 "기간 일정"만 (달력에 막대로 그릴 때 사용)
+function getMultiDayEventsInRange(startStr, endStr) {
+  return loadEvents().filter(
+    (ev) => isMultiDay(ev) && ev.date <= endStr && (ev.endDate || ev.date) >= startStr
+  );
+}
+
+function addEvent(date, endDate, time, title) {
   const events = loadEvents();
-  events.push({ id: Date.now().toString(), date, time, title });
+  events.push({ id: Date.now().toString(), date, endDate: endDate || date, time, title });
   saveEvents(events);
 }
 
-function updateEvent(id, date, time, title) {
+function updateEvent(id, date, endDate, time, title) {
   const events = loadEvents();
   const target = events.find((ev) => ev.id === id);
   if (target) {
     target.date = date;
+    target.endDate = endDate || date;
     target.time = time;
     target.title = title;
     saveEvents(events);
@@ -52,7 +67,6 @@ function makeDateString(year, month, day) {
 }
 
 // ---------- 날짜별 기분 + 기록(day data) ----------
-// 구조: { "2026-09-21": { mood: "😊", journal: "오늘은..." }, ... }
 
 function loadDayData() {
   const saved = localStorage.getItem(DAY_DATA_KEY);
