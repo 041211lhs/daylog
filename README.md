@@ -8,13 +8,33 @@
 
 Google Calendar처럼 실용적인 월간 달력에서 시작해, 주간 일정을 거쳐 특정 날짜의 상세 화면까지 이동할 수 있는 개인 일정 관리 서비스입니다. 하루 상세 화면에서는 그날의 기분과 자유 기록을 남길 수 있고, 작성한 기록을 AI가 짧게 회고해주는 기능을 제공합니다.
 
+## 페이지 / 섹션 구성
+
+상단 탭(Month / Week / Day)으로 3개의 화면을 자유롭게 오갈 수 있습니다. (요구사항: 최소 3개 이상의 페이지/섹션 + 메뉴 이동)
+
+| 화면 | 내용 |
+|---|---|
+| Month | 월간 달력, 이전/다음 달 이동, 오늘 버튼, 여러 날에 걸친 일정 막대 표시 |
+| Week | 7일 가로 배치, 요일별 토글로 일정 목록 펼쳐보기 |
+| Day | 오늘의 일정 / 오늘의 기분 / 오늘의 기록, AI 하루 회고 |
+
 ## 주요 기능
 
-- **월간 캘린더**: 이전/다음 달 이동, 오늘 날짜 강조, 여러 날에 걸친 일정을 막대로 표시
-- **주간 화면**: 7일을 가로로 배치, 요일별 토글로 일정 목록 펼쳐보기
-- **하루 상세 화면**: 일정 목록, 기분 이모지 선택, 자유 기록 텍스트 영역
+- **월간 캘린더**: 이전/다음 달 이동, 오늘 날짜 강조, 다중일 일정 막대 표시
+- **주간 화면**: 7일 가로 배치, 요일별 토글, 모바일에서는 가로 스크롤
+- **하루 상세 화면**: 일정 목록, 기분 이모지 선택, 자유 기록 텍스트
 - **일정 관리**: 추가/수정/삭제, localStorage로 새로고침 후에도 데이터 유지
-- **AI 하루 회고**: 그날의 기록과 일정을 바탕으로 AI가 2~4문장 요약과 키워드를 생성
+- **AI 하루 회고**: 그날의 기록과 일정을 바탕으로 AI가 담백한 요약과 키워드를 생성
+
+## AI 기능 (입력 → 결과 출력)
+
+- **입력**: 사용자가 작성한 오늘의 기록(텍스트) + 해당 날짜 일정 목록
+- **처리**: `fetch('/api/reflect')` → Python 서버리스 함수 → AI API 호출
+- **출력**: 2~4문장의 하루 정리 + 키워드 2~4개
+- **실패 처리**:
+  - 빈 입력 → "오늘의 기록을 먼저 작성해주세요." (400)
+  - API 오류 → "AI 응답을 가져오지 못했습니다. 잠시 후 다시 시도해주세요." (502)
+  - 15초 초과 시 타임아웃 처리, 요청 중에는 버튼이 "AI가 정리하는 중..."으로 바뀌며 비활성화되어 중복 호출 방지
 
 ## 기술 스택
 
@@ -22,7 +42,7 @@ Google Calendar처럼 실용적인 월간 달력에서 시작해, 주간 일정�
 - **백엔드**: Vercel Serverless Functions (Python)
 - **AI 연동**: Codyssey 프록시 엔드포인트 (OpenAI 호환 Chat Completions API)
 - **데이터 저장**: 브라우저 localStorage
-- **배포**: Vercel
+- **배포**: Vercel (GitHub 연동 자동 배포)
 
 ## 프로젝트 구조
 
@@ -40,51 +60,77 @@ daylog/
 │   └── storage.js
 ├── api/
 │   └── reflect.py
+├── screenshots/
 ├── requirements.txt
 ├── pyproject.toml
 ├── README.md
+├── PLANNING.md
 └── .env.example
 ```
+
+프론트엔드(HTML/CSS/JS)와 백엔드(`api/`)가 폴더 단위로 명확히 구분되어 있습니다.
 
 ## 실행 방법
 
 ### 로컬에서 프론트엔드만 확인하기
 
-1. 이 저장소를 클론합니다.
 ```bash
-   git clone https://github.com/041211lhs/daylog.git
-   cd daylog
+git clone https://github.com/041211lhs/daylog.git
+cd daylog
 ```
-2. `index.html`을 VS Code의 Live Server 확장 프로그램으로 열거나, 브라우저로 직접 엽니다.
-   - 단, AI 하루 회고 기능은 서버리스 함수가 필요해서 로컬 정적 실행만으로는 동작하지 않습니다.
+
+`index.html`을 VS Code Live Server 확장으로 열거나 브라우저로 직접 엽니다. (단, AI 회고 기능은 서버리스 함수가 필요해 정적 실행만으로는 동작하지 않습니다.)
 
 ### Vercel에 배포하기
 
-1. GitHub에 저장소를 push합니다.
-2. [vercel.com](https://vercel.com)에서 **Add New → Project**로 이 저장소를 Import합니다.
-3. Framework Preset은 **Other**로 둡니다.
-4. 아래 [환경 변수 설정](#환경-변수-설정)을 등록합니다.
-5. **Deploy**를 클릭합니다.
+1. GitHub에 저장소를 push
+2. [vercel.com](https://vercel.com) → **Add New → Project** → 이 저장소 Import
+3. Framework Preset: **Other**
+4. 아래 [환경 변수](#환경-변수-설정) 등록
+5. **Deploy**
 
 ## 환경 변수 설정
 
-Vercel 프로젝트 → **Settings → Environment Variables**에서 아래 3개를 등록해야 합니다. (`.env.example` 참고)
+Vercel 프로젝트 → **Settings → Environment Variables**에 아래 3개를 등록합니다. (`.env.example` 참고)
 
-| Key | 설명 | 예시 값 |
+| Key | 설명 | 예시 |
 |---|---|---|
 | `OPENAI_API_KEY` | AI API 인증 키 | 발급받은 키 값 |
 | `OPENAI_BASE_URL` | AI API 엔드포인트 주소 | `https://copa.codyssey.kr/v1` |
 | `OPENAI_MODEL` | 사용할 모델명 | `gpt-5.4` |
 
-> API 키는 절대 코드나 커밋 이력에 직접 작성하지 않고, 반드시 환경 변수로만 관리합니다.
+> API 키는 코드나 커밋 이력에 직접 작성하지 않고 환경 변수로만 관리합니다.
 
-## AI 기능 흐름
+## 반응형 확인
 
-```
-사용자가 오늘의 기록 입력
-→ "AI 하루 회고 요청" 버튼 클릭
-→ JavaScript fetch() → POST /api/reflect
-→ Python 서버리스 함수가 AI API 호출
-→ 응답(JSON) 반환
-→ 화면에 요약 + 키워드 표시
-```
+데스크톱과 실제 스마트폰(모바일 브라우저) 두 가지 환경에서 직접 접속해 확인했습니다.
+
+- 데스크톱: 월간 달력 전체와 주간 7일이 한 화면에 표시됨
+- 모바일: 월간 달력이 세로로 자연스럽게 축소, 주간 화면은 가로 스크롤, 하루 상세는 3영역이 세로로 배치됨
+
+## 스크린샷
+
+**모바일 (Month 화면)**
+
+![모바일 화면](screenshots/01-mobile.png)
+
+**데스크톱 - Month**
+
+![PC Month 화면](screenshots/02-pc-month.png)
+
+**데스크톱 - Week**
+
+![PC Week 화면](screenshots/03-pc-week.png)
+
+**데스크톱 - Day (AI 하루 회고 동작 포함)**
+
+![PC Day 화면과 AI 회고 결과](screenshots/04-pc-day.png)
+
+## 개발 과정에서 배운 점
+
+- **HTML/CSS/JS 역할 분리**: HTML은 화면 구조(달력 칸, 모달, 입력창), CSS는 레이아웃과 반응형 스타일, JavaScript는 날짜 계산·localStorage 저장·이벤트 처리·fetch 호출을 담당하도록 파일을 나눴습니다.
+- **fetch 흐름**: 사용자가 기록을 입력하고 버튼을 누르면 JavaScript가 `fetch('/api/reflect', { method: 'POST', ... })`로 요청을 보내고, 응답이 오면 화면에 요약/키워드를 렌더링합니다.
+- **Vercel Serverless Functions(Python)**: `api/reflect.py`의 `handler` 클래스가 하나의 서버리스 함수가 되어, 프론트에서 온 POST 요청을 받아 AI API를 대신 호출합니다. `pyproject.toml`의 `[tool.vercel] entrypoint`로 어떤 함수를 실행할지 지정해야 한다는 것을 배포 오류를 겪으며 알게 되었습니다.
+- **환경 변수로 키 관리**: API 키를 프론트 코드에 두면 브라우저 개발자도구로 누구나 볼 수 있어서, 반드시 서버(Python 함수) 쪽에서만 `os.environ.get()`으로 읽도록 구성했습니다.
+- **로컬 vs 배포 환경 차이**: 로컬에서 `index.html`만 열면 정적 화면은 보이지만 `/api/reflect`는 동작하지 않습니다(서버리스 함수는 Vercel에 배포되어야 실행됨). 또한 `vercel.json`의 예전 방식 런타임 설정이나 Framework Preset이 배포 결과를 바꾼다는 것을 직접 겪으며 확인했습니다.
+- **디버깅 경험**: 배포 중 `pyproject.toml` entrypoint 형식 오류, `vercel.json`의 오래된 `runtime` 문법 오류, `uv lock`을 위한 `[project]` 테이블 누락, Framework Preset 불일치로 정적 파일 대신 파이썬 함수로 모든 요청이 라우팅되는 문제 등을 순서대로 겪었고, 각 에러 메시지를 기준으로 원인을 좁혀가며 해결했습니다.
